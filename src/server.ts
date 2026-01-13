@@ -71,6 +71,16 @@ app.post("/", (req: Request, res: Response) => {
     });
 });
 
+
+// Not found route
+app.use((req:Request, res:Response)=>{
+    res.status(404).json({
+        success: false,
+        message: "Route not found",
+        path: req.path
+    });
+});
+
 app.listen(port, () => {
     console.log(`Server is running on port : ${port}`);
 });
