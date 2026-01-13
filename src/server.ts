@@ -2,6 +2,7 @@ import express, { NextFunction, Request, Response } from "express";
 import initDB from "./config/db";
 import config from "./config";
 import logger from "./middleware/logger";
+import { authRoutes } from "./modules/auth/auth.routes";
 
 // express app
 const app = express();
@@ -12,6 +13,7 @@ app.use(express.json());
 // database setup
 initDB();
 
+app.use("/api/v1/auth", authRoutes);
 
 app.get("/", logger, (req: Request, res: Response) => {
     res.send("hello world");
@@ -26,13 +28,12 @@ app.post("/", (req: Request, res: Response) => {
     });
 });
 
-
 // Not found route
-app.use((req:Request, res:Response)=>{
+app.use((req: Request, res: Response) => {
     res.status(404).json({
         success: false,
         message: "Route not found",
-        path: req.path
+        path: req.path,
     });
 });
 
