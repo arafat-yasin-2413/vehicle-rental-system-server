@@ -1,13 +1,14 @@
 import express, { NextFunction, Request, Response } from "express";
 import { Pool } from "pg";
+import config from "./config";
 
 const app = express();
-const port = process.env.PORT;
+const port = config.port;
 // body parser
 app.use(express.json());
 
 const pool = new Pool({
-    connectionString: process.env.CONNECTION_STR,
+    connectionString: config.connection_str,
 });
 
 const initDB = async () => {
