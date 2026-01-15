@@ -20,7 +20,27 @@ const signUpUser = async (req: Request, res: Response) => {
 };
 
 
+const signInUser = async (req: Request, res: Response) => {
+	try {
+		const result = await authServices.signInUser(req.body);
+		// console.log('result ---' ,result);
+
+	 	return res.status(200).json({
+			success: true,
+			message: "Login Successfull",
+			data: result,
+		});
+	} catch (error: any) {
+		return res.status(401).json({
+			success: false,
+			message: error.message,
+		});
+	}
+};
+
+
 
 export const authController = {
     signUpUser,
+	signInUser,
 };
