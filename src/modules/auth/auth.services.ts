@@ -54,7 +54,6 @@ const signInUser = async (payload: Record<string, unknown>) => {
 
     // console.log("************************************************\n")
     // console.log('Printing "ispasswordmatch" : ', isPasswordMatch);
-    // console.log("***********************************************\n")
 
     // password not matched
     if (!isPasswordMatch) {
