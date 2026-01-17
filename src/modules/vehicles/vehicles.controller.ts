@@ -45,7 +45,7 @@ const getAllVehicles = async (req: Request, res: Response) => {
 
 const getVehicleById = async (req: Request, res: Response) => {
     try {
-        const result = await vehiclesServices.getVehicleById(req.params.id as string);
+        const result = await vehiclesServices.getVehicleById(req.params.vehicleId as string);
         // console.log(
         //     "------ Printing at vehicles-controller ------- \n",
         //     result.rowCount,
@@ -54,7 +54,7 @@ const getVehicleById = async (req: Request, res: Response) => {
         if(result.rowCount === 0) {
             return res.status(404).json({
                 success: false,
-                message: `Vehicle Not Found With id = ${req.params.id}`
+                message: `Vehicle Not Found With id = ${req.params.vehicleId}`
             });
         }
 
