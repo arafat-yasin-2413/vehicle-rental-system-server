@@ -5,5 +5,6 @@ import { vehiclesController } from "./vehicles.controller";
 const router = Router();
 
 router.post("/", auth("admin"), vehiclesController.addNewVehicle);
+router.get("/", vehiclesController.getAllVehicles);
 
 export const vehiclesRoutes = router;
