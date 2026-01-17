@@ -67,7 +67,7 @@ const signInUser = async (payload: Record<string, unknown>) => {
         expiresIn: "7d",
     });
 
-    console.log({ token });
+    // console.log({ token });
 
     delete user.password;
     return { user, token };
