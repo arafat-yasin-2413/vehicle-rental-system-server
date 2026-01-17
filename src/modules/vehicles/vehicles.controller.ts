@@ -4,10 +4,7 @@ import { vehiclesServices } from "./vehicles.services";
 const addNewVehicle = async (req: Request, res: Response) => {
     try {
         const result = await vehiclesServices.addNewVehicle(req.body);
-        console.log(
-            "------ Printing at vehicles-controller ------- \n",
-            result.rows[0],
-        );
+        console.log("------ Printing at vehicles-controller ------- \n", result.rows[0]);
 
         return res.status(201).json({
             success: true,
@@ -25,10 +22,7 @@ const addNewVehicle = async (req: Request, res: Response) => {
 const getAllVehicles = async (req: Request, res: Response) => {
     try {
         const result = await vehiclesServices.getAllVehicles();
-        console.log(
-            "------ Printing at vehicles-controller ------- \n",
-            result.rows,
-        );
+        console.log("------ Printing at vehicles-controller ------- \n", result.rows);
 
         return res.status(200).json({
             success: true,
@@ -51,10 +45,10 @@ const getVehicleById = async (req: Request, res: Response) => {
         //     result.rowCount,
         // );
 
-        if(result.rowCount === 0) {
+        if (result.rowCount === 0) {
             return res.status(404).json({
                 success: false,
-                message: `Vehicle Not Found With id = ${req.params.vehicleId}`
+                message: `Vehicle Not Found With id = ${req.params.vehicleId}`,
             });
         }
 
@@ -71,8 +65,36 @@ const getVehicleById = async (req: Request, res: Response) => {
     }
 };
 
+const updateVehicleById = async (req: Request, res: Response) => {
+    const { vehicle_name, type, registration_number, daily_rent_price, availability_status } = req.body;
+
+    try {
+        const result = await vehiclesServices.updateVehicleById(vehicle_name, type, registration_number, daily_rent_price, availability_status, req.params.vehicleId as string);
+        // console.log(result.rows);
+
+        if (result.rows.length === 0) {
+            return res.status(404).json({
+                success: false,
+                message: "Vehicle Not Found",
+            });
+        } else {
+            res.status(200).json({
+                success: true,
+                message: "Vehicle Updated Successfully",
+                data: result.rows[0],
+            });
+        }
+    } catch (err: any) {
+        res.status(500).json({
+            success: false,
+            message: err.message,
+        });
+    }
+};
+
 export const vehiclesController = {
     addNewVehicle,
     getAllVehicles,
     getVehicleById,
+    updateVehicleById,
 };
