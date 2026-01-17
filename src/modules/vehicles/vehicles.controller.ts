@@ -4,7 +4,10 @@ import { vehiclesServices } from "./vehicles.services";
 const addNewVehicle = async (req: Request, res: Response) => {
     try {
         const result = await vehiclesServices.addNewVehicle(req.body);
-        console.log('------ Printing at vehicles-controller ------- \n', result.rows[0]);
+        console.log(
+            "------ Printing at vehicles-controller ------- \n",
+            result.rows[0],
+        );
 
         return res.status(201).json({
             success: true,
@@ -22,7 +25,10 @@ const addNewVehicle = async (req: Request, res: Response) => {
 const getAllVehicles = async (req: Request, res: Response) => {
     try {
         const result = await vehiclesServices.getAllVehicles();
-        console.log('------ Printing at vehicles-controller ------- \n', result.rows);
+        console.log(
+            "------ Printing at vehicles-controller ------- \n",
+            result.rows,
+        );
 
         return res.status(200).json({
             success: true,
@@ -37,7 +43,36 @@ const getAllVehicles = async (req: Request, res: Response) => {
     }
 };
 
+const getVehicleById = async (req: Request, res: Response) => {
+    try {
+        const result = await vehiclesServices.getVehicleById(req.params.id as string);
+        // console.log(
+        //     "------ Printing at vehicles-controller ------- \n",
+        //     result.rowCount,
+        // );
+
+        if(result.rowCount === 0) {
+            return res.status(404).json({
+                success: false,
+                message: `Vehicle Not Found With id = ${req.params.id}`
+            });
+        }
+
+        return res.status(200).json({
+            success: true,
+            message: "Got Vehicle by given id in the params.",
+            data: result.rows[0],
+        });
+    } catch (error: any) {
+        return res.status(500).json({
+            success: false,
+            message: error.message,
+        });
+    }
+};
+
 export const vehiclesController = {
     addNewVehicle,
     getAllVehicles,
+    getVehicleById,
 };
