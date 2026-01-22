@@ -38,12 +38,18 @@ const updateUserProfile = async (id: string, loggedInUserData: Record<string, un
             hashedPassword = await bcrypt.hash(payload.password as string, 12);
         }
 
-        const result = await pool.query(`UPDATE users SET name=$1, email=$2, password=$3, phone=$4 WHERE id=$5 RETURNING *`, [payload.name, payload.email, hashedPassword, payload.phone, id]);
+        const result = await pool.query(`UPDATE users SET name=$1, email=$2, password=$3, phone=$4 WHERE id=$5 RETURNING name, email, phone, role`, [
+            payload.name,
+            payload.email,
+            hashedPassword,
+            payload.phone,
+            id,
+        ]);
         return result;
     }
 
     const hashedPasswordByAdmin = await bcrypt.hash(payload.password as string, 12);
-    const result = await pool.query(`UPDATE users SET name=$1, email=$2, password=$3, phone=$4, role=$5 WHERE id=$6 RETURNING *`, [
+    const result = await pool.query(`UPDATE users SET name=$1, email=$2, password=$3, phone=$4, role=$5 WHERE id=$6 RETURNING name, email, phone, role`, [
         payload.name,
         payload.email,
         hashedPasswordByAdmin,
