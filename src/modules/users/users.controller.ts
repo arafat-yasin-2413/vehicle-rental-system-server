@@ -27,7 +27,7 @@ const updateUserProfile = async(req:Request, res:Response) =>{
         // console.log('printing from try block ', id);
         // console.log('******Printing the loggedin user details******* \n', req.user!);
         const result = await usersServices.updateUserProfile(req.params.userId as string, loggedInUserData, req.body)
-        console.log('Printing updated result ---- \n', result.rows);
+        // console.log('Printing updated result ---- \n', result.rows);
 
         return res.status(200).json({
             success: true, 

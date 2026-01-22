@@ -51,9 +51,20 @@ const addNewBooking = async (payload: Record<string, unknown>, loggedInUserData:
     return result;
 };
 
-const allBookings = async () => {
-    const resutl = await pool.query(`SELECT * FROM bookings`);
-    return resutl;
+const allBookings = async (payload: Record<string, unknown>) => {
+
+
+    console.log('Logged in user data in allBooking services : ', payload);
+
+    if(payload.role !== 'admin') {
+        const myBookings = await pool.query(`SELECT * FROM bookings WHERE customer_id=$1`, [payload.id]);
+        return myBookings;
+    }
+
+
+
+    const result = await pool.query(`SELECT * FROM bookings`);
+    return result;
 };
 
 export const bookingsServices = {

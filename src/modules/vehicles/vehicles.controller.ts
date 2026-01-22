@@ -4,7 +4,7 @@ import { vehiclesServices } from "./vehicles.services";
 const addNewVehicle = async (req: Request, res: Response) => {
     try {
         const result = await vehiclesServices.addNewVehicle(req.body);
-        console.log("------ Printing at vehicles-controller ------- \n", result.rows[0]);
+        // console.log("------ Printing at vehicles-controller ------- \n", result.rows[0]);
 
         return res.status(201).json({
             success: true,
@@ -22,7 +22,7 @@ const addNewVehicle = async (req: Request, res: Response) => {
 const getAllVehicles = async (req: Request, res: Response) => {
     try {
         const result = await vehiclesServices.getAllVehicles();
-        console.log("------ Printing at vehicles-controller ------- \n", result.rows);
+        // console.log("------ Printing at vehicles-controller ------- \n", result.rows);
 
         return res.status(200).json({
             success: true,
@@ -96,8 +96,8 @@ const deleteVehicleById = async(req: Request, res:Response) =>{
     try {
         const result = await vehiclesServices.deleteVehicleById(req.params.vehicleId as string);
 
-        console.log("Delete result : -------", result.rows);
-        console.log("RowCount : -------", result.rowCount);
+        // console.log("Delete result : -------", result.rows);
+        // console.log("RowCount : -------", result.rowCount);
 
         if (result.rowCount === 0) {
             res.status(404).json({

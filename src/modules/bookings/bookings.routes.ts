@@ -6,6 +6,6 @@ import { bookingsController } from "./bookings.controller";
 const router = Router();
 
 router.post("/", auth(Roles.admin, Roles.customer), bookingsController.addNewBooking);
-router.get("/", bookingsController.allBookings);
+router.get("/", auth(Roles.admin, Roles.customer), bookingsController.allBookings);
 
 export const bookingsRoutes = router;
