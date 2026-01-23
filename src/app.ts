@@ -21,7 +21,7 @@ app.use("/api/v1/vehicles", vehiclesRoutes);
 app.use("/api/v1/bookings", bookingsRoutes);
 
 app.get("/", logger, (req: Request, res: Response) => {
-    res.send("hello world");
+    res.send("Welcome to Vehicle Rental System Server HOME PAGE");
 });
 
 app.post("/", (req: Request, res: Response) => {
