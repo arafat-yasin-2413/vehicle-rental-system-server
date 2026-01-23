@@ -76,7 +76,6 @@ const updateBooking = async(req: Request, res:Response) =>{
     }
 }
 
-
 export const bookingsController = {
     addNewBooking,
     allBookings,

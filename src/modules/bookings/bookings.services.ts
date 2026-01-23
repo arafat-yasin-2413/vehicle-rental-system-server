@@ -58,19 +58,29 @@ const allBookings = async (payload: Record<string, unknown>) => {
     // console.log('Logged in user data in allBooking services : ', payload);
     const today = new Date();
     const currentDateOnly = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+    const todayInIsoFormat = currentDateOnly.toISOString().split('T')[0];
 
-    if(payload.role !== 'admin') {
-        const myBookings = await pool.query(`SELECT * FROM bookings WHERE customer_id=$1`, [payload.id]);
-        return myBookings;
+    try{
+
+        if(payload.role !== 'admin') {
+            const myBookings = await pool.query(`SELECT * FROM bookings WHERE customer_id=$1`, [payload.id]);
+            return myBookings;
+        }
+        
+        
+        
+        await pool.query(`UPDATE bookings SET status='returned' WHERE status <> 'returned' AND rent_end_date::date <= $1`,[todayInIsoFormat] );
+        
+        const result = await pool.query(`SELECT * FROM bookings`);
+        return result;
+    }
+
+    catch(error: any) {
+        console.log(error.message);
+        throw new Error("Database connection error. Try Again Later.");
     }
 
 
-    const todayInIsoFormat = currentDateOnly.toISOString().split('T')[0];
-
-    await pool.query(`UPDATE bookings SET status='returned' WHERE status !== 'returned' AND rent_end_date::date <= $1`,[todayInIsoFormat] );
-
-    const result = await pool.query(`SELECT * FROM bookings`);
-    return result;
 };
 
 const updateBooking = async(bookingId: string, loggedInUserData: Record<string, unknown>) =>{
