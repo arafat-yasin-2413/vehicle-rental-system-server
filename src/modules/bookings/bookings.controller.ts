@@ -7,7 +7,7 @@ const addNewBooking = async (req: Request, res: Response) => {
         // console.log('Printing logged in user from booking controller : ', req.user);
         const loggedInUserData = req.user as JwtPayload;
         const result = await bookingsServices.addNewBooking(req.body, loggedInUserData);
-        console.log("Result in booking controller : ", result.rows[0]);
+        // console.log("Result in booking controller : ", result.rows[0]);
 
         return res.status(201).json({
             success: true,
@@ -59,7 +59,7 @@ const updateBooking = async(req: Request, res:Response) =>{
         // console.log('Printing Booking Id : ', bookingId);
 
         const result = await bookingsServices.updateBooking(bookingId as string, loggedInUserData);
-        console.log('printing updateBooking.controller result : ', result?.rows);
+        // console.log('printing updateBooking.controller result : ', result?.rows);
 
         return res.status(200).json({
             success: true,

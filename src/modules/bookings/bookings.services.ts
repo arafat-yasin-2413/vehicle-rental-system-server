@@ -75,7 +75,7 @@ const allBookings = async (payload: Record<string, unknown>) => {
 
 const updateBooking = async(bookingId: string, loggedInUserData: Record<string, unknown>) =>{
     // console.log('Booking Id received : ', bookingId);
-    console.log('Current LoggedInUser : ', loggedInUserData);
+    // console.log('Current LoggedInUser : ', loggedInUserData);
 
     const matchedBooking = await pool.query(`SELECT * FROM bookings WHERE id=$1`,[bookingId]);
     
@@ -84,7 +84,7 @@ const updateBooking = async(bookingId: string, loggedInUserData: Record<string, 
         throw new Error(`No booking data found for bookingId : ${bookingId}`);
     }
 
-    console.log('Printing matched bookings : \n', matchedBooking.rowCount, "\n,", matchedBooking.rows[0]);
+    // console.log('Printing matched bookings : \n', matchedBooking.rowCount, "\n,", matchedBooking.rows[0]);
     
     const bookingData = matchedBooking.rows[0];
 
@@ -114,7 +114,7 @@ const updateBooking = async(bookingId: string, loggedInUserData: Record<string, 
     else{
         // step 1 : ei bookingId er data ante hobe
         const currentBookingData = await pool.query(`SELECT * FROM bookings WHERE id=$1`,[bookingId]);
-        console.log('Current booking data : ', currentBookingData.rows[0]);
+        // console.log('Current booking data : ', currentBookingData.rows[0]);
 
         if(currentBookingData.rows[0].status !== 'cancelled') {
             throw new Error(`This booking data can't be updated by admin though. Because it is already in ${currentBookingData.rows[0].status} state.`);
