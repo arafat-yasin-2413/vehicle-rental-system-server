@@ -55,8 +55,9 @@ const addNewBooking = async (payload: Record<string, unknown>, loggedInUserData:
 
 const allBookings = async (payload: Record<string, unknown>) => {
 
-
     // console.log('Logged in user data in allBooking services : ', payload);
+    const today = new Date();
+    const currentDateOnly = new Date(today.getFullYear(), today.getMonth(), today.getDate());
 
     if(payload.role !== 'admin') {
         const myBookings = await pool.query(`SELECT * FROM bookings WHERE customer_id=$1`, [payload.id]);
@@ -64,6 +65,9 @@ const allBookings = async (payload: Record<string, unknown>) => {
     }
 
 
+    const todayInIsoFormat = currentDateOnly.toISOString().split('T')[0];
+
+    await pool.query(`UPDATE bookings SET status='returned' WHERE status !== 'returned' AND rent_end_date::date <= $1`,[todayInIsoFormat] );
 
     const result = await pool.query(`SELECT * FROM bookings`);
     return result;
