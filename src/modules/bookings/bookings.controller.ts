@@ -51,7 +51,34 @@ const allBookings = async (req: Request, res: Response) => {
     }
 };
 
+
+const updateBooking = async(req: Request, res:Response) =>{
+    try{
+        const loggedInUserData = req.user as JwtPayload;
+        const bookingId = req.params.bookingId;
+        // console.log('Printing Booking Id : ', bookingId);
+
+        const result = await bookingsServices.updateBooking(bookingId as string, loggedInUserData);
+        console.log('printing updateBooking.controller result : ', result?.rows);
+
+        return res.status(200).json({
+            success: true,
+            message: "Booking Updated Successfully",
+            data: result
+        })
+    }
+
+    catch(error: any) {
+        return res.status(500).json({
+            success: false,
+            message: error.message
+        })
+    }
+}
+
+
 export const bookingsController = {
     addNewBooking,
     allBookings,
+    updateBooking,
 };

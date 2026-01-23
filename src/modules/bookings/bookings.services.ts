@@ -1,4 +1,6 @@
+import { Result } from "pg";
 import { pool } from "../../config/db";
+import separateDate from "../../utils/separateDate";
 
 const addNewBooking = async (payload: Record<string, unknown>, loggedInUserData: Record<string, unknown>) => {
     // console.log("Vehicle booking Payload : ", payload);
@@ -54,7 +56,7 @@ const addNewBooking = async (payload: Record<string, unknown>, loggedInUserData:
 const allBookings = async (payload: Record<string, unknown>) => {
 
 
-    console.log('Logged in user data in allBooking services : ', payload);
+    // console.log('Logged in user data in allBooking services : ', payload);
 
     if(payload.role !== 'admin') {
         const myBookings = await pool.query(`SELECT * FROM bookings WHERE customer_id=$1`, [payload.id]);
@@ -67,7 +69,66 @@ const allBookings = async (payload: Record<string, unknown>) => {
     return result;
 };
 
+const updateBooking = async(bookingId: string, loggedInUserData: Record<string, unknown>) =>{
+    // console.log('Booking Id received : ', bookingId);
+    console.log('Current LoggedInUser : ', loggedInUserData);
+
+    const matchedBooking = await pool.query(`SELECT * FROM bookings WHERE id=$1`,[bookingId]);
+    
+    // Work for Any Role
+    if(matchedBooking.rowCount === 0) {
+        throw new Error(`No booking data found for bookingId : ${bookingId}`);
+    }
+
+    console.log('Printing matched bookings : \n', matchedBooking.rowCount, "\n,", matchedBooking.rows[0]);
+    
+    const bookingData = matchedBooking.rows[0];
+
+    const currentDateOnly = separateDate(new Date()) as string;
+    const rentStartDateOnly = separateDate(new Date(bookingData.rent_start_date)) as string;
+
+    // Customer Role
+    if(loggedInUserData.role !== 'admin') {
+        
+        if(currentDateOnly >= rentStartDateOnly ) {
+            throw new Error("Booking already started, Cannot Cancel");
+        }
+        else {
+            if(bookingData.status !== 'active'){
+                throw new Error(`This Booking Data Cannot be Updated. It is in ${bookingData.status} state`);
+            }
+            else if(bookingData.status === 'active') {
+                const updateResult = await pool.query(`UPDATE bookings SET status=$1 WHERE id=$2 RETURNING *`,['cancelled',bookingId]);
+                return updateResult;
+            }
+
+        }
+        
+    }
+
+    // admin Role
+    else{
+        // step 1 : ei bookingId er data ante hobe
+        const currentBookingData = await pool.query(`SELECT * FROM bookings WHERE id=$1`,[bookingId]);
+        console.log('Current booking data : ', currentBookingData.rows[0]);
+
+        if(currentBookingData.rows[0].status !== 'cancelled') {
+            throw new Error(`This booking data can't be updated by admin though. Because it is already in ${currentBookingData.rows[0].status} state.`);
+        }
+
+        const result = await pool.query(`UPDATE bookings SET status=$1 WHERE id=$2 RETURNING *`,['returned',bookingId]);
+        await pool.query(`UPDATE vehicles SET availability_status=$1 WHERE id=$2`,['available',bookingData.vehicle_id]);
+        // step 2 : ei booking data er status diye check korte hobe
+        return result;
+    }
+
+    
+    
+}
+
+
 export const bookingsServices = {
     addNewBooking,
     allBookings,
+    updateBooking,
 };
