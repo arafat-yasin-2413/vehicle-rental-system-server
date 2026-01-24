@@ -7,5 +7,6 @@ const router = Router();
 
 router.get("/",auth(Roles.admin), usersController.getAllUser);  
 router.put("/:userId", auth(Roles.admin, Roles.customer), usersController.updateUserProfile);
+router.delete("/:userId", auth(Roles.admin), usersController.deleteUser);
 
 export const usersRoutes = router;

@@ -58,7 +58,27 @@ const updateUserProfile = async (
     return result;
 };
 
+const deleteUser = async (userId:string) =>{
+    const isValidUser = await pool.query(`SELECT * FROM bookings WHERE customer_id=$1`,[userId]);
+    // console.log('Printing isValid User rowcount: ', isValidUser.rowCount);
+    if(isValidUser.rowCount === 0) {
+        throw new Error(`This User (id= ${userId}) Has No Instance in Booking Table. Try with another userId.`);
+    }
+
+    const activeBooking = await pool.query(`SELECT 1 FROM bookings WHERE customer_id=$1 AND status='active' LIMIT 1`,[userId]);
+
+    // console.log('Printing activeBooking rowcount : ', activeBooking.rowCount);
+
+    if(activeBooking.rowCount as number > 0) {
+        throw new Error(`This User (id = ${userId}) Has Active Bookings. Can't be Deleted.`);
+    }
+
+    const result = await pool.query(`DELETE FROM users WHERE id=$1`,[userId]);
+    return result;
+}
+
 export const usersServices = {
     getAllUser,
     updateUserProfile,
+    deleteUser,
 };

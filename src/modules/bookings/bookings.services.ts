@@ -5,7 +5,7 @@ import separateDate from "../../utils/separateDate";
 const addNewBooking = async (payload: Record<string, unknown>, loggedInUserData: Record<string, unknown>) => {
     // console.log("Vehicle booking Payload : ", payload);
 
-    console.log('Logged in user data in booking.service : ', loggedInUserData);
+    // console.log('Logged in user data in booking.service : ', loggedInUserData);
 
     const vehicle = await pool.query(
         `SELECT daily_rent_price FROM vehicles WHERE id=$1 AND availability_status='available'`,
