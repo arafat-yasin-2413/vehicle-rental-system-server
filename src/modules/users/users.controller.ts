@@ -20,18 +20,14 @@ const getAllUser = async (req: Request, res: Response) => {
 
 const updateUserProfile = async(req:Request, res:Response) =>{
     try{
-        // const id = req.params.userId;
         const loggedInUserData = req.user!;
 
-
-        // console.log('printing from try block ', id);
-        // console.log('******Printing the loggedin user details******* \n', req.user!);
         const result = await usersServices.updateUserProfile(req.params.userId as string, loggedInUserData, req.body)
-        // console.log('Printing updated result ---- \n', result.rows);
 
         return res.status(200).json({
             success: true, 
-            message: "Update done"
+            message: "Update done",
+            data: result.rows[0]
         });
     }
     catch(err:any) {
