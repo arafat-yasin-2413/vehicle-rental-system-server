@@ -13,7 +13,7 @@ const updateUserProfile = async (
     payload: Record<string, unknown>,
 ) => {
     // console.log('Logged in user : ', loggedInUserData);
-    console.log("Hit update User Api : Printing Payload Data : \n", payload);
+    // console.log("Hit update User Api : Printing Payload Data : \n", payload);
 
     // At first CHECK if the user exist (with "id");
     const matchedUser = await pool.query(`SELECT id,name,email,phone,role FROM users WHERE id=$1`, [id]);
