@@ -4,9 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "node api.js && tsx watch ./src/server.ts",
+    "dev": "tsx watch ./src/server.ts",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "node api.js && tsc"
+    "build": "tsc"
   },
   "keywords": [],
   "author": "",
